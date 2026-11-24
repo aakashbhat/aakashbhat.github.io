@@ -8,17 +8,16 @@ permalink: /about/
 
 ---
 
-<p class="eyebrow">About</p>
 
 # About <em>me</em>
 
-My name is Aakash Bhat, and I'm a postdoc in the group of Prof. Dr. Dr. Stephan Geier at the University of Potsdam, where I also did my PhD.
+I am a postdoc in the group of Prof. Dr. Dr. Stephan Geier at the University of Potsdam, where I also did my PhD.
 
 I was raised in Noida, a city close to New Delhi, India, and did my bachelor's in engineering at the Indian Institute of Technology Delhi. I then came to Germany and got my master's in physics from Friedrich-Alexander-Universität Erlangen-Nürnberg.
 
 ## Research interests
 
-May main research interest are runaway stars, especially white dwarfs ejected at extreme speeds by thermonuclear supernovae. See my <a href="{{ '/research/' | relative\_url }}">papers</a>.
+My main research interest are runaway stars, especially white dwarfs ejected at extreme speeds by thermonuclear supernovae. See my <a href="{{ '/research/' | relative\_url }}">papers</a>.
 
 
 
