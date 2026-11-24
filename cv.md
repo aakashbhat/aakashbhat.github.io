@@ -1,6 +1,5 @@
 ---
 layout: default
-title: CV
 permalink: /cv/
 class: research   # reuse the wide layout and font from the Research page
 ---
