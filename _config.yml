@@ -13,6 +13,7 @@ adobe_fonts_kit:
 nav:
   - { title: Home,  url: / }
   - { title: Research, url: /research/ }
+  - { title: CV, url: /cv/ }
   - { title: About, url: /about/ }
 
 exclude: [README.md, LICENSE]
