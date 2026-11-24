@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if page.title %}{{ page.title }} · {% endif %}{{ site.title }}</title>
+  <meta name="description" content="{{ site.description }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  {% if page.class == 'research' %}
+  <!-- Research page font: Proxima Nova via Adobe Fonts if a kit is set, else Figtree -->
+  {% if site.adobe_fonts_kit %}<link rel="stylesheet" href="https://use.typekit.net/{{ site.adobe_fonts_kit }}.css">{% endif %}
+  <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600&display=swap" rel="stylesheet">
+  {% endif %}
+  <!-- ?v=build time: forces browsers to fetch the new file after each push -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+</head>
+<body class="{{ page.class }}"{% if page.runaway %} data-runaway{% endif %}>
+  <!-- Decorative background: star-rangoli (assets/js/sky.js) -->
+  <canvas id="sky" aria-hidden="true"></canvas>
+  {% include header.html %}
+  <main>{{ content }}</main>
+  {% include footer.html %}
+  <script src="{{ '/assets/js/sky.js' | relative_url }}?v={{ site.time | date: '%s' }}"></script>
+</body>
+</html>

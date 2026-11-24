@@ -303,17 +303,17 @@ body.research .lead {
   color: var(--accent);
 }
 
-.cv-frame {
+/* PDF pages drawn by PDF.js (script in cv.md).
+   invert + hue-rotate turns white pages dark while keeping colours roughly
+   the same; screen blending lets the background show through faintly.
+   Delete the filter and mix-blend-mode lines to show the original white pages. */
+.cv-pages { display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px; }
+.cv-pages canvas {
   display: block;
   width: 100%;
-  height: 85vh;
-  border: 1px solid var(--slate);
-  background: #fff;
-}
-
-.cv-frame p {
-  padding: 1rem;
-  color: #222;
+  border-radius: 4px;
+  filter: invert(.92) hue-rotate(180deg);
+  mix-blend-mode: screen;
 }
 
 /* About page: career path timeline */
