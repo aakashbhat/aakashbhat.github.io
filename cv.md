@@ -2,7 +2,7 @@
 layout: default
 title: CV
 permalink: /cv/
-class: research   # reuse the wide layout and font from the Research page
+class: wide   # reuse the wide layout and font from the Publications page
 ---
 <!-- To update: replace assets/files/cv.pdf with your new CV (same file name). -->
 {% assign cv = '/assets/files/cv.pdf' | relative_url %}

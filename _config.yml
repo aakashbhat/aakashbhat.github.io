@@ -12,7 +12,7 @@ adobe_fonts_kit:
 # Navigation: edit this list to add/remove pages
 nav:
   - { title: Home,  url: / }
-  - { title: Research, url: /research/ }
+  - { title: Publications, url: /publications/ }
   - { title: CV, url: /cv/ }
   - { title: About, url: /about/ }
 

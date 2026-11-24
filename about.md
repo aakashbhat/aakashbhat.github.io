@@ -12,7 +12,7 @@ I was raised in Noida, a city close to New Delhi, India, and did my bachelor's i
 
 ## Research interests
 
-My main research interest are runaway stars, especially white dwarfs ejected at extreme speeds by thermonuclear supernovae. See my <a href="{{ '/research/' | relative_url }}">papers</a>.
+My main research interest are runaway stars, especially white dwarfs ejected at extreme speeds by thermonuclear supernovae. See my <a href="{{ '/publications/' | relative_url }}">papers</a>.
 
 
 

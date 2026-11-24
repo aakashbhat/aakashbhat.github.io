@@ -1,6 +1,6 @@
 <!-- Site header + navigation; links come from `nav` in _config.yml -->
 <header class="site-header">
-  <a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>
+  {% unless page.url == '/' %}<a class="brand" href="{{ '/' | relative_url }}">{{ site.title }}</a>{% endunless %}
   <nav>
     {% for item in site.nav %}
       <a href="{{ item.url | relative_url }}"{% if page.url == item.url %} class="active"{% endif %}>{{ item.title }}</a>
