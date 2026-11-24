@@ -307,7 +307,13 @@ body.research .lead {
    invert + hue-rotate turns white pages dark while keeping colours roughly
    the same; screen blending lets the background show through faintly.
    Delete the filter and mix-blend-mode lines to show the original white pages. */
-.cv-pages { display: flex; flex-direction: column; gap: 1.5rem; max-width: 900px; }
+.cv-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 680px;
+}
+
 .cv-pages canvas {
   display: block;
   width: 100%;
