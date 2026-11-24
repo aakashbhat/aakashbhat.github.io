@@ -1,5 +1,6 @@
 ---
 layout: default
+title: CV
 permalink: /cv/
 class: research   # reuse the wide layout and font from the Research page
 ---
@@ -7,8 +8,6 @@ class: research   # reuse the wide layout and font from the Research page
 {% assign cv = '/assets/files/cv.pdf' | relative_url %}
 
 <p class="eyebrow">Curriculum vitae</p>
-
-# <em>CV</em>
 
 <p class="cv-actions">
   <a href="{{ cv }}" download>Download PDF</a>

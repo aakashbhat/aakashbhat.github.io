@@ -63,7 +63,7 @@ a:hover { color: var(--accent-3); }
 /* =========================================================
    Layout
    ========================================================= */
-.site-header, .site-footer, main { width: min(760px, 90vw); margin-inline: auto; }
+.site-header, .site-footer, main { width: min(760px, 90vw); margin-left: 8vw; margin-right: auto; }
 main { flex: 1; padding: 8vh 0; }
 
 .site-header { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5rem 0 0; }
