@@ -25,13 +25,19 @@
   const FLASH = 0.04;        // fraction of the cycle the explosion flash lasts
   const TRAVEL = 0.55;       // fraction of the cycle the escape takes
 
-  // Stick figure watching the runaway through a magnifying glass (same pages)
-  const FIGURE_X = .07;      // horizontal position, fraction of window width (matches text margin)
-  const FIGURE_UP = 100;     // px from the bottom of the window to the figure's feet
+  // Escape direction: rises PATH_DROP of the window height while crossing 80% of its width
+  const PATH_DROP = .45;
+
+  // Stick figure with a telescope tracking the runaway (same pages)
+  const FIGURE_X = .07;      // left edge of the scene, fraction of window width (matches text margin)
+  const FIGURE_UP = 100;     // px from the bottom of the window to the ground line
   const FIGURE_MIN_W = 760, FIGURE_MIN_H = 560;   // hidden on smaller windows
-  const ZOOM = 3.2;          // lens magnification
-  let armAngle = -2.2;       // current arm angle (eased toward the star each frame)
+  const ZOOM = 3.4;          // magnification shown in the eyepiece bubble
+  let aim = -.6;             // telescope angle (eased toward the target each frame)
+  let away = 0;              // 0 = at the eyepiece, 1 = jumped back in surprise
   let jumpStart = -1e9;      // time the last jump started
+  const VIEW = Array.from({ length: 14 }, () =>       // faint stars in the eyepiece view
+    [(Math.random() - .5) * 40, (Math.random() - .5) * 40, Math.random() * .8 + .3]);
 
   const rnd = Math.random;
   const stars = [];          // {x, y, r, color, alpha, phase, speed} in pattern units
@@ -148,7 +154,7 @@
     // 2. Escape: position along a straight line out of the core
     const travel = (phase - FLASH / 2) / TRAVEL;
     if (travel <= 0 || travel >= 1) { ctx.globalAlpha = 1; return { flash: phase < FLASH }; }
-    const dir = Math.atan2(h * .6, -w * .8);
+    const dir = Math.atan2(h * PATH_DROP, -w * .8);
     const dist = travel * Math.hypot(w, h);
     const ux = Math.cos(dir), uy = Math.sin(dir);
     const px = cx + ux * dist, py = cy + uy * dist;
@@ -191,81 +197,120 @@
     ctx.beginPath(); ctx.arc(px, py, 2.6, 0, 6.28); ctx.fill();
   }
 
-  // Stick figure that follows the runaway with a magnifying glass and
-  // jumps when the supernova goes off. `star` comes from drawRunaway().
+  // Stick figure at a small telescope that tracks the runaway. A bubble shows
+  // the eyepiece view; at each supernova the figure jumps back in surprise.
+  // `star` comes from drawRunaway(); cx, cy is the cluster centre.
   function drawFigure(t, w, h, star, cx, cy) {
-    const fx = w * FIGURE_X + 40, ground = h - FIGURE_UP;
-    const ink = PALETTE[3], rim = PALETTE[1], handle = PALETTE[2];
+    const ink = PALETTE[3], gold = v('--accent-2'), slate = v('--slate');
+    const ground = h - FIGURE_UP;
+    const mx = w * FIGURE_X + 100, my = ground - 52;       // tripod head (telescope pivot)
+    const line = (p, q) => { ctx.beginPath(); ctx.moveTo(...p); ctx.lineTo(...q); ctx.stroke(); };
 
-    // Jump: one big hop then a small one, starting at the explosion
+    // Jump at the explosion; `away` eases between eyepiece (0) and standing back (1)
     if (star.flash && t - jumpStart > 1500) jumpStart = t;
     const j = (t - jumpStart) / 700;
-    const lift = j >= 0 && j < 1 ? Math.sin(j * Math.PI) * 34
-               : j >= 1 && j < 1.6 ? Math.sin((j - 1) / .6 * Math.PI) * 14 : 0;
-    const air = lift > 2, fy = ground - lift;
+    const lift = j >= 0 && j < 1 ? Math.sin(j * Math.PI) * 30
+               : j >= 1 && j < 1.6 ? Math.sin((j - 1) / .6 * Math.PI) * 12 : 0;
+    const air = lift > 2;
+    away += ((j >= 0 && j < 2.2 ? 1 : 0) - away) * .12;
 
-    // Body points
-    const hip = [fx, fy - 34], neck = [fx, fy - 70], head = [fx, fy - 82], shoulder = [fx, fy - 64];
-
-    // Look and point at the star if one is flying, otherwise at the cluster
+    // Aim at the star if one is flying, else the cluster; keep the tube above the horizon
     const target = star.x !== undefined ? [star.x, star.y] : [cx, cy];
-    const want = Math.atan2(target[1] - neck[1], target[0] - neck[0]);
-    // Ease toward the target along the shorter way round (avoids spinning at ±180°)
-    const turn = ((want - armAngle + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
-    armAngle += turn * .08;
-    const hand = [shoulder[0] + Math.cos(armAngle) * 26, shoulder[1] + Math.sin(armAngle) * 26];
-    const lens = [hand[0] + Math.cos(armAngle) * 20, hand[1] + Math.sin(armAngle) * 20], R = 17;
+    let want = Math.atan2(target[1] - my, target[0] - mx);
+    if (want > -.2 && want < Math.PI / 2) want = -.2;
+    else if (want < -Math.PI + .2 || want >= Math.PI / 2) want = -Math.PI + .2;
+    aim += (want - aim) * .05;
+    const dx = Math.cos(aim), dy = Math.sin(aim), side = dx >= 0 ? -1 : 1;   // side the observer stands on
 
     ctx.save();
-    ctx.globalAlpha = .85;
+    ctx.globalAlpha = .9;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
 
-    // Short ground line
-    ctx.strokeStyle = v('--slate'); ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.moveTo(fx - 60, ground + .5); ctx.lineTo(fx + 60, ground + .5); ctx.stroke();
+    // Ground line
+    ctx.strokeStyle = slate; ctx.lineWidth = 1;
+    line([mx - 90, ground + .5], [mx + 70, ground + .5]);
 
-    // Legs, body, arms, head
-    ctx.strokeStyle = ink; ctx.lineWidth = 2.2;
-    ctx.beginPath();
-    ctx.moveTo(...hip); ctx.lineTo(fx - (air ? 14 : 10), fy - (air ? 6 : 0));
-    ctx.moveTo(...hip); ctx.lineTo(fx + (air ? 14 : 10), fy - (air ? 6 : 0));
-    ctx.moveTo(...hip); ctx.lineTo(...neck);
-    ctx.moveTo(...shoulder); ctx.lineTo(...hand);
-    ctx.moveTo(...shoulder);
-    if (air) ctx.lineTo(shoulder[0] - 14, shoulder[1] - 18); else ctx.lineTo(shoulder[0] - 6, shoulder[1] + 20);
-    ctx.stroke();
-    ctx.beginPath(); ctx.arc(...head, 10, 0, 6.28); ctx.stroke();
-    const look = Math.atan2(target[1] - head[1], target[0] - head[0]);
-    ctx.fillStyle = ink;
-    ctx.beginPath(); ctx.arc(head[0] + Math.cos(look) * 5, head[1] + Math.sin(look) * 5 - 1, 1.6, 0, 6.28); ctx.fill();
+    // Tripod
+    ctx.strokeStyle = ink; ctx.lineWidth = 2;
+    line([mx, my], [mx - 20, ground]); line([mx, my], [mx + 20, ground]); line([mx, my], [mx + 3, ground]);
 
-    // Magnifier handle
-    ctx.strokeStyle = handle; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.moveTo(...hand);
-    ctx.lineTo(lens[0] - Math.cos(armAngle) * R, lens[1] - Math.sin(armAngle) * R); ctx.stroke();
-
-    // Lens: zoomed-in view of the runaway, centred on it
+    // Telescope: tube, dew shield, eyepiece, finder scope (drawn rotated)
     ctx.save();
-    ctx.beginPath(); ctx.arc(...lens, R, 0, 6.28); ctx.clip();
-    ctx.fillStyle = 'rgba(87, 117, 144, .25)';
-    ctx.fillRect(lens[0] - R, lens[1] - R, 2 * R, 2 * R);
-    if (star.x !== undefined) {
-      ctx.setTransform(ZOOM, 0, 0, ZOOM, lens[0] - star.x * ZOOM, lens[1] - star.y * ZOOM);
-      drawStar(star.x, star.y, star.ux, star.uy, star.scale);
-    }
+    ctx.translate(mx, my); ctx.rotate(aim);
+    ctx.fillStyle = v('--bg'); ctx.strokeStyle = ink; ctx.lineWidth = 1.8;
+    ctx.beginPath(); ctx.rect(-22, -4.5, 62, 9); ctx.fill(); ctx.stroke();
+    ctx.beginPath(); ctx.rect(36, -6.5, 10, 13); ctx.fill(); ctx.strokeStyle = gold; ctx.stroke();
+    ctx.strokeStyle = ink;
+    ctx.beginPath(); ctx.rect(-30, -2.5, 8, 5); ctx.stroke();
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.rect(2, -10, 16, 4); ctx.stroke();
     ctx.restore();
+    ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(mx, my, 2.5, 0, 6.28); ctx.fill();
 
-    // Lens rim and glint
-    ctx.strokeStyle = rim; ctx.lineWidth = 2.5;
-    ctx.beginPath(); ctx.arc(...lens, R, 0, 6.28); ctx.stroke();
-    ctx.strokeStyle = 'rgba(247, 239, 230, .5)'; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.arc(...lens, R - 5, -2.4, -1.6); ctx.stroke();
+    // Observer: head at the eyepiece, or standing back after a jump
+    const eyepiece = [mx - dx * 30, my - dy * 30];
+    const standX = eyepiece[0] + side * 16 + side * away * 18;
+    const fy = ground - lift, hip = [standX + side * 4, fy - 32];
+    const headAtScope = [eyepiece[0] + side * 9, Math.min(eyepiece[1] + 1, fy - 48)];
+    const headUp = [standX, fy - 80];
+    const head = [headAtScope[0] + (headUp[0] - headAtScope[0]) * away,
+                  headAtScope[1] + (headUp[1] - headAtScope[1]) * away];
+    const neck = [head[0] + (hip[0] - head[0]) * .2, head[1] + (hip[1] - head[1]) * .2];
+    const shoulder = [neck[0] + (hip[0] - neck[0]) * .15, neck[1] + (hip[1] - neck[1]) * .15];
 
-    // "!" during the first hop
+    ctx.strokeStyle = ink; ctx.lineWidth = 2.2;
+    line(hip, [hip[0] - 9, fy - (air ? 6 : 0)]);
+    line(hip, [hip[0] + 9, fy - (air ? 6 : 0)]);
+    line(hip, neck);
+    if (away > .5) {                      // arms up in surprise
+      line(shoulder, [shoulder[0] + 12, shoulder[1] - 20]);
+      line(shoulder, [shoulder[0] - 12, shoulder[1] - 20]);
+    } else {                              // one hand on the tube, one at the side
+      const grip = [mx - dx * 8, my - dy * 8 + 3];
+      const elbow = [(shoulder[0] + grip[0]) / 2, (shoulder[1] + grip[1]) / 2 + 8];
+      ctx.beginPath(); ctx.moveTo(...shoulder); ctx.lineTo(...elbow); ctx.lineTo(...grip); ctx.stroke();
+      line(shoulder, [shoulder[0] + side * 4, shoulder[1] + 20]);
+    }
+    ctx.beginPath(); ctx.arc(...head, 10, 0, 6.28); ctx.stroke();
+    ctx.fillStyle = ink;
+    if (away < .5) {                      // one eye, pressed to the eyepiece
+      ctx.beginPath(); ctx.arc(head[0] - side * 6, head[1], 1.6, 0, 6.28); ctx.fill();
+    } else {                              // both eyes and an "o" mouth
+      ctx.beginPath(); ctx.arc(head[0] - 3, head[1] - 1, 1.6, 0, 6.28); ctx.arc(head[0] + 3, head[1] - 1, 1.6, 0, 6.28); ctx.fill();
+      ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(head[0], head[1] + 5, 2.2, 0, 6.28); ctx.stroke();
+    }
     if (air && j < 1) {
-      ctx.globalAlpha = .85 * (1 - j);
-      ctx.fillStyle = rim; ctx.font = '600 16px sans-serif';
-      ctx.fillText('!', head[0] + 14, head[1] - 12);
+      ctx.globalAlpha = .9 * (1 - j);
+      ctx.fillStyle = gold; ctx.font = '600 16px sans-serif';
+      ctx.fillText('!', head[0] + 12, head[1] - 14);
+    }
+
+    // Eyepiece view bubble (fades out while the observer is away)
+    const view = 1 - away;
+    if (view > .02) {
+      const bub = [mx - 60, ground - 150], R = 26;
+      ctx.globalAlpha = .7 * view; ctx.fillStyle = ink;
+      for (const [f, r] of [[.3, 2], [.6, 3]]) {          // thought-bubble dots
+        ctx.beginPath(); ctx.arc(head[0] + (bub[0] - head[0]) * f, head[1] + (bub[1] - head[1]) * f, r, 0, 6.28); ctx.fill();
+      }
+      ctx.save();
+      ctx.beginPath(); ctx.arc(...bub, R, 0, 6.28);
+      ctx.globalAlpha = view; ctx.fillStyle = '#05080c'; ctx.fill(); ctx.clip();
+      for (const [a, b, r] of VIEW) {
+        ctx.globalAlpha = .6 * view; ctx.fillStyle = '#dcebff';
+        ctx.beginPath(); ctx.arc(bub[0] + a, bub[1] + b, r, 0, 6.28); ctx.fill();
+      }
+      if (star.x !== undefined) {
+        ctx.globalAlpha = view;
+        ctx.setTransform(ZOOM, 0, 0, ZOOM, bub[0] - star.x * ZOOM, bub[1] - star.y * ZOOM);
+        drawStar(star.x, star.y, star.ux, star.uy, star.scale);
+      }
+      ctx.restore();
+      ctx.globalAlpha = view; ctx.strokeStyle = gold; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(...bub, R, 0, 6.28); ctx.stroke();
+      ctx.globalAlpha = .4 * view; ctx.lineWidth = 1;           // crosshairs
+      line([bub[0] - R + 6, bub[1]], [bub[0] - 6, bub[1]]); line([bub[0] + 6, bub[1]], [bub[0] + R - 6, bub[1]]);
+      line([bub[0], bub[1] - R + 6], [bub[0], bub[1] - 6]); line([bub[0], bub[1] + 6], [bub[0], bub[1] + R - 6]);
     }
     ctx.restore();
   }
