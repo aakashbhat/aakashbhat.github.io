@@ -127,7 +127,7 @@
       const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
       glow.addColorStop(0, '#fff6d8');
       glow.addColorStop(.3, PALETTE[1]);
-      glow.addColorStop(1, 'rgba(234, 43, 31, 0)');
+      glow.addColorStop(1, 'rgba(240, 138, 75, 0)');
       ctx.globalAlpha = (1 - k) * .6; ctx.fillStyle = glow;
       ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.28); ctx.fill();
       ctx.globalAlpha = (1 - k) * .8; ctx.strokeStyle = PALETTE[0];
@@ -149,11 +149,11 @@
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Motion trail, cream fading to red
+    // Motion trail, off-white fading to tangerine
     const tail = 90 * scale;
     const trail = ctx.createLinearGradient(px, py, px - ux * tail, py - uy * tail);
-    trail.addColorStop(0, 'rgba(249, 237, 204, .9)');
-    trail.addColorStop(1, 'rgba(234, 43, 31, 0)');
+    trail.addColorStop(0, 'rgba(247, 239, 230, .9)');
+    trail.addColorStop(1, 'rgba(240, 138, 75, 0)');
     ctx.globalAlpha = fade; ctx.strokeStyle = trail; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - ux * tail, py - uy * tail); ctx.stroke();
     ctx.lineWidth = 1;
