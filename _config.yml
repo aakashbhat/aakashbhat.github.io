@@ -1,6 +1,13 @@
-remote_theme: pages-themes/architect@v0.2.0
-plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
-title: [Aakash Bhat]
-description: [Astrophysicist]
+# Site settings (no remote theme: layouts live in _layouts, styles in assets/css)
+title: Aakash Bhat
+tagline: Astrophysicist
+description: Personal space to know more about my work.
+url: https://aakashbhat.github.io
+lang: en
 
+# Navigation: edit this list to add/remove pages
+nav:
+  - { title: Home,  url: / }
+  - { title: About, url: /about/ }
+
+exclude: [README.md, LICENSE]
