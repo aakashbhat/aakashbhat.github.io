@@ -25,6 +25,14 @@
   const FLASH = 0.04;        // fraction of the cycle the explosion flash lasts
   const TRAVEL = 0.55;       // fraction of the cycle the escape takes
 
+  // Stick figure watching the runaway through a magnifying glass (same pages)
+  const FIGURE_X = .07;      // horizontal position, fraction of window width (matches text margin)
+  const FIGURE_UP = 100;     // px from the bottom of the window to the figure's feet
+  const FIGURE_MIN_W = 760, FIGURE_MIN_H = 560;   // hidden on smaller windows
+  const ZOOM = 3.2;          // lens magnification
+  let armAngle = -2.2;       // current arm angle (eased toward the star each frame)
+  let jumpStart = -1e9;      // time the last jump started
+
   const rnd = Math.random;
   const stars = [];          // {x, y, r, color, alpha, phase, speed} in pattern units
   const add = (x, y, r, color, alpha) =>
@@ -108,7 +116,10 @@
     }
     ctx.globalAlpha = 1;
 
-    if (RUNAWAY && !still) drawRunaway(t, w, h, cx, cy, scale);
+    if (RUNAWAY && !still) {
+      const star = drawRunaway(t, w, h, cx, cy, scale);
+      if (w >= FIGURE_MIN_W && h >= FIGURE_MIN_H) drawFigure(t, w, h, star, cx, cy);
+    }
 
     if (!still) {
       angle += (t - last) * ROT_SPEED; last = t;
@@ -136,7 +147,7 @@
 
     // 2. Escape: position along a straight line out of the core
     const travel = (phase - FLASH / 2) / TRAVEL;
-    if (travel <= 0 || travel >= 1) { ctx.globalAlpha = 1; return; }
+    if (travel <= 0 || travel >= 1) { ctx.globalAlpha = 1; return { flash: phase < FLASH }; }
     const dir = Math.atan2(h * .6, -w * .8);
     const dist = travel * Math.hypot(w, h);
     const ux = Math.cos(dir), uy = Math.sin(dir);
@@ -149,18 +160,9 @@
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
     ctx.setLineDash([]);
 
-    // Motion trail, off-white fading to tangerine
-    const tail = 90 * scale;
-    const trail = ctx.createLinearGradient(px, py, px - ux * tail, py - uy * tail);
-    trail.addColorStop(0, 'rgba(247, 239, 230, .9)');
-    trail.addColorStop(1, 'rgba(240, 138, 75, 0)');
-    ctx.globalAlpha = fade; ctx.strokeStyle = trail; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - ux * tail, py - uy * tail); ctx.stroke();
-    ctx.lineWidth = 1;
-
-    // The white dwarf itself (hot, so blue-white)
-    ctx.fillStyle = '#f4f8ff';
-    ctx.beginPath(); ctx.arc(px, py, 2.6, 0, 6.28); ctx.fill();
+    // Trail and the white dwarf itself
+    ctx.globalAlpha = fade;
+    drawStar(px, py, ux, uy, scale);
 
     // Targeting brackets
     const b = 10;
@@ -173,6 +175,99 @@
     }
     ctx.stroke();
     ctx.globalAlpha = 1;
+    return { x: px, y: py, ux, uy, scale, fade, flash: phase < FLASH };
+  }
+
+  // The runaway: a motion trail (off-white fading to tangerine) and a blue-white dot
+  function drawStar(px, py, ux, uy, scale) {
+    const tail = 90 * scale;
+    const trail = ctx.createLinearGradient(px, py, px - ux * tail, py - uy * tail);
+    trail.addColorStop(0, 'rgba(247, 239, 230, .9)');
+    trail.addColorStop(1, 'rgba(240, 138, 75, 0)');
+    ctx.strokeStyle = trail; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - ux * tail, py - uy * tail); ctx.stroke();
+    ctx.lineWidth = 1;
+    ctx.fillStyle = '#f4f8ff';
+    ctx.beginPath(); ctx.arc(px, py, 2.6, 0, 6.28); ctx.fill();
+  }
+
+  // Stick figure that follows the runaway with a magnifying glass and
+  // jumps when the supernova goes off. `star` comes from drawRunaway().
+  function drawFigure(t, w, h, star, cx, cy) {
+    const fx = w * FIGURE_X + 40, ground = h - FIGURE_UP;
+    const ink = PALETTE[3], rim = PALETTE[1], handle = PALETTE[2];
+
+    // Jump: one big hop then a small one, starting at the explosion
+    if (star.flash && t - jumpStart > 1500) jumpStart = t;
+    const j = (t - jumpStart) / 700;
+    const lift = j >= 0 && j < 1 ? Math.sin(j * Math.PI) * 34
+               : j >= 1 && j < 1.6 ? Math.sin((j - 1) / .6 * Math.PI) * 14 : 0;
+    const air = lift > 2, fy = ground - lift;
+
+    // Body points
+    const hip = [fx, fy - 34], neck = [fx, fy - 70], head = [fx, fy - 82], shoulder = [fx, fy - 64];
+
+    // Look and point at the star if one is flying, otherwise at the cluster
+    const target = star.x !== undefined ? [star.x, star.y] : [cx, cy];
+    const want = Math.atan2(target[1] - neck[1], target[0] - neck[0]);
+    // Ease toward the target along the shorter way round (avoids spinning at ±180°)
+    const turn = ((want - armAngle + Math.PI) % (2 * Math.PI) + 2 * Math.PI) % (2 * Math.PI) - Math.PI;
+    armAngle += turn * .08;
+    const hand = [shoulder[0] + Math.cos(armAngle) * 26, shoulder[1] + Math.sin(armAngle) * 26];
+    const lens = [hand[0] + Math.cos(armAngle) * 20, hand[1] + Math.sin(armAngle) * 20], R = 17;
+
+    ctx.save();
+    ctx.globalAlpha = .85;
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+
+    // Short ground line
+    ctx.strokeStyle = v('--slate'); ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(fx - 60, ground + .5); ctx.lineTo(fx + 60, ground + .5); ctx.stroke();
+
+    // Legs, body, arms, head
+    ctx.strokeStyle = ink; ctx.lineWidth = 2.2;
+    ctx.beginPath();
+    ctx.moveTo(...hip); ctx.lineTo(fx - (air ? 14 : 10), fy - (air ? 6 : 0));
+    ctx.moveTo(...hip); ctx.lineTo(fx + (air ? 14 : 10), fy - (air ? 6 : 0));
+    ctx.moveTo(...hip); ctx.lineTo(...neck);
+    ctx.moveTo(...shoulder); ctx.lineTo(...hand);
+    ctx.moveTo(...shoulder);
+    if (air) ctx.lineTo(shoulder[0] - 14, shoulder[1] - 18); else ctx.lineTo(shoulder[0] - 6, shoulder[1] + 20);
+    ctx.stroke();
+    ctx.beginPath(); ctx.arc(...head, 10, 0, 6.28); ctx.stroke();
+    const look = Math.atan2(target[1] - head[1], target[0] - head[0]);
+    ctx.fillStyle = ink;
+    ctx.beginPath(); ctx.arc(head[0] + Math.cos(look) * 5, head[1] + Math.sin(look) * 5 - 1, 1.6, 0, 6.28); ctx.fill();
+
+    // Magnifier handle
+    ctx.strokeStyle = handle; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(...hand);
+    ctx.lineTo(lens[0] - Math.cos(armAngle) * R, lens[1] - Math.sin(armAngle) * R); ctx.stroke();
+
+    // Lens: zoomed-in view of the runaway, centred on it
+    ctx.save();
+    ctx.beginPath(); ctx.arc(...lens, R, 0, 6.28); ctx.clip();
+    ctx.fillStyle = 'rgba(87, 117, 144, .25)';
+    ctx.fillRect(lens[0] - R, lens[1] - R, 2 * R, 2 * R);
+    if (star.x !== undefined) {
+      ctx.setTransform(ZOOM, 0, 0, ZOOM, lens[0] - star.x * ZOOM, lens[1] - star.y * ZOOM);
+      drawStar(star.x, star.y, star.ux, star.uy, star.scale);
+    }
+    ctx.restore();
+
+    // Lens rim and glint
+    ctx.strokeStyle = rim; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(...lens, R, 0, 6.28); ctx.stroke();
+    ctx.strokeStyle = 'rgba(247, 239, 230, .5)'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.arc(...lens, R - 5, -2.4, -1.6); ctx.stroke();
+
+    // "!" during the first hop
+    if (air && j < 1) {
+      ctx.globalAlpha = .85 * (1 - j);
+      ctx.fillStyle = rim; ctx.font = '600 16px sans-serif';
+      ctx.fillText('!', head[0] + 14, head[1] - 12);
+    }
+    ctx.restore();
   }
 
   addEventListener('resize', () => { resize(); if (still) draw(0); });

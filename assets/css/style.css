@@ -70,6 +70,12 @@ main {
   margin-right: auto;
 }
 
+/* Main content fills the page height, keeping the footer at the bottom */
+main {
+  flex: 1;
+  padding: 8vh 0;
+}
+
 main p {
   max-width: 70ch;
 }
