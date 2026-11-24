@@ -20,7 +20,7 @@
   --accent-3: #f2a541;
   /* Golden Orange: hover */
   --line: rgba(87, 117, 144, .35);
-  --sans: "Rajdhani", system-ui, sans-serif;
+  --sans: "proxima-nova", system-ui, sans-serif;
   --mono: "Share Tech Mono", ui-monospace, monospace;
 }
 
@@ -96,7 +96,8 @@ main p {
 }
 
 nav {
-  margin-left: auto;   /* keeps the menu on the right even without the name */
+  margin-left: auto;
+  /* keeps the menu on the right even without the name */
 }
 
 nav a {
