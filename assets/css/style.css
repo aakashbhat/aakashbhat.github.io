@@ -95,21 +95,41 @@ h2::before { content: "// "; color: var(--accent); }
 .links a:hover { border-color: var(--accent); color: var(--accent); }
 
 /* =========================================================
-   Research page: paper list (data in _data/papers.yml)
+   Research page (body.research): wider layout, Proxima Nova,
+   paper list from _data/papers.yml. Same palette as the rest.
    ========================================================= */
-.papers { list-style: none; padding: 0; margin: 2.5rem 0 0; }
-.paper { position: relative; padding: 1.4rem 0 1.4rem 1.4rem; border-left: 1px solid var(--oxblood); }
-.paper::before { content: ""; position: absolute; left: -4px; top: 1.95rem; width: 7px; height: 7px;
-  background: var(--accent); box-shadow: 0 0 8px var(--accent); }   /* a "star" on the timeline */
-.paper-meta { font: .78rem var(--mono); color: var(--accent-2); letter-spacing: .1em; text-transform: uppercase; }
-.paper h3 { font-weight: 500; font-size: 1.35rem; line-height: 1.25; margin: .3rem 0 .4rem; }
-.paper h3 a { color: var(--text); }
-.paper h3 a:hover { color: var(--accent); }
-.paper-authors { font-size: .95rem; color: var(--muted); margin: 0 0 .6rem; }
-.paper p { margin: 0 0 .7rem; }
-.paper-links { display: flex; gap: 1rem; font: .8rem var(--mono); }
+body.research { --sans: "proxima-nova", "Figtree", system-ui, sans-serif; font-family: var(--sans); }
+body.research .site-header,
+body.research .site-footer,
+body.research main { width: min(1120px, 92vw); }
+body.research .lead { max-width: 52ch; }
+/* The wider layout leaves less margin, so hide the corner HUD sooner */
+@media (max-width: 1450px) { body.research .hud { display: none; } }
+
+.papers { list-style: none; padding: 0; margin: 3rem 0 0; }
+.paper { position: relative; display: grid; grid-template-columns: 190px 1fr; gap: 2.5rem;
+  padding: 1.8rem 0; border-top: 1px solid var(--line); }
+.paper:last-child { border-bottom: 1px solid var(--line); }
+
+/* Left column: year, journal, links */
+.paper-side { padding-left: 1.1rem; border-left: 2px solid var(--accent); }
+.paper-meta { font: .8rem/1.6 var(--mono); color: var(--accent-2); letter-spacing: .08em; text-transform: uppercase; }
+.paper-links { display: flex; flex-direction: column; gap: .25rem; margin-top: .9rem; font: .8rem var(--mono); }
 .paper-links a::before { content: "→ "; color: var(--accent); }
 .paper-links a.project { color: var(--accent); }
-.tags { list-style: none; padding: 0; margin: .7rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+
+/* Right column: title, authors, summary, tags */
+.paper h3 { font-weight: 600; font-size: 1.4rem; line-height: 1.25; margin: 0 0 .4rem; }
+.paper h3 a { color: var(--text); }
+.paper h3 a:hover { color: var(--accent); }
+.paper-authors { font-size: .95rem; color: var(--muted); margin: 0 0 .7rem; }
+.paper-body p { margin: 0 0 .7rem; max-width: 72ch; }
+.tags { list-style: none; padding: 0; margin: .8rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem; }
 .tags li { font: .7rem var(--mono); color: var(--muted); border: 1px solid var(--oxblood); padding: .1rem .5rem; }
 .paper-note { margin-top: 2rem; font: .85rem var(--mono); color: var(--muted); }
+
+/* Narrow screens: stack the two columns */
+@media (max-width: 760px) {
+  .paper { grid-template-columns: 1fr; gap: 1rem; }
+  .paper-links { flex-direction: row; gap: 1rem; }
+}

@@ -2,6 +2,7 @@
 layout: default
 title: Research
 permalink: /research/
+class: research   # wider layout + Proxima Nova / Figtree (see style.css)
 ---
 <p class="eyebrow">Research</p>
 
@@ -13,17 +14,21 @@ permalink: /research/
 <ol class="papers">
 {% for p in site.data.papers %}
   <li class="paper">
-    <div class="paper-meta">{{ p.year }} · {{ p.journal }}</div>
+    <div class="paper-side">
+      <div class="paper-meta">{{ p.year }}<br>{{ p.journal }}</div>
+      <div class="paper-links">
+        <a href="https://arxiv.org/abs/{{ p.arxiv }}">arXiv</a>
+        <a href="{{ p.ads }}">ADS</a>
+        <a href="https://doi.org/{{ p.doi }}">DOI</a>
+        {% if p.project %}<a class="project" href="{{ p.project | relative_url }}">Project</a>{% endif %}
+      </div>
+    </div>
+    <div class="paper-body">
     <h3><a href="https://doi.org/{{ p.doi }}">{{ p.title }}</a></h3>
     <p class="paper-authors">{{ p.authors }}</p>
     <p>{{ p.summary }}</p>
-    <div class="paper-links">
-      <a href="https://arxiv.org/abs/{{ p.arxiv }}">arXiv</a>
-      <a href="{{ p.ads }}">ADS</a>
-      <a href="https://doi.org/{{ p.doi }}">DOI</a>
-      {% if p.project %}<a class="project" href="{{ p.project | relative_url }}">Project</a>{% endif %}
-    </div>
     <ul class="tags">{% for t in p.tags %}<li>{{ t }}</li>{% endfor %}</ul>
+    </div>
   </li>
 {% endfor %}
 </ol>

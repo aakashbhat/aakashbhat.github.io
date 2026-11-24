@@ -5,6 +5,10 @@ description: Personal space to know more about my work.
 url: https://aakashbhat.github.io
 lang: en
 
+# Optional Adobe Fonts kit ID (e.g. abc1def) to load Proxima Nova.
+# Leave empty to use the free look-alike, Figtree.
+adobe_fonts_kit:
+
 # Navigation: edit this list to add/remove pages
 nav:
   - { title: Home,  url: / }
