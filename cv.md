@@ -7,7 +7,7 @@ class: research   # reuse the wide layout and font from the Research page
 <!-- To update: replace assets/files/cv.pdf with your new CV (same file name). -->
 {% assign cv = '/assets/files/cv.pdf' | relative_url %}
 
-<p class="eyebrow">Curriculum vitae</p>
+# Curriculum vitae
 
 <p class="cv-actions">
   <a href="{{ cv }}" download>Download PDF</a>

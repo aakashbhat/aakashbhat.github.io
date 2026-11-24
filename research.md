@@ -4,9 +4,7 @@ title: Research
 permalink: /research/
 class: research   # wider layout + Proxima Nova / Figtree (see style.css)
 ---
-<p class="eyebrow">Research</p>
-
-# First-author <em>papers</em>
+# First-author papers
 
 <p class="lead">I study runaway stars, and especially the white dwarfs flung out at extreme speeds when their companion explodes.</p>
 

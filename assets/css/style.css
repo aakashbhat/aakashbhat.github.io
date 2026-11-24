@@ -48,92 +48,15 @@ a:hover {
 }
 
 /* =========================================================
-   Background layers (all fixed, behind content, no clicks)
+   Background: star-rangoli canvas (drawn by assets/js/sky.js)
    ========================================================= */
-#sky,
-.bg-grid,
-.scanlines,
-.hud {
-  position: fixed;
-  pointer-events: none;
-  z-index: -1;
-}
-
 #sky {
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
-}
-
-/* Perspective floor grid, fading out toward the horizon */
-.bg-grid {
-  left: -50%;
-  right: -50%;
-  bottom: -10vh;
-  height: 55vh;
-  background-image:
-    linear-gradient(var(--slate) 1px, transparent 1px),
-    linear-gradient(90deg, var(--slate) 1px, transparent 1px);
-  background-size: 60px 60px;
-  transform: perspective(400px) rotateX(62deg);
-  transform-origin: bottom;
-  mask-image: linear-gradient(to top, rgba(0, 0, 0, .55), transparent 85%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, .55), transparent 85%);
-}
-
-/* CRT scanlines */
-.scanlines {
-  inset: 0;
-  background: repeating-linear-gradient(to bottom, rgba(247, 239, 230, .025) 0 1px, transparent 1px 3px);
-}
-
-/* Corner HUD readouts */
-.hud {
-  font: .7rem var(--mono);
-  color: var(--muted);
-  opacity: .55;
-  letter-spacing: .12em;
-}
-
-.hud.tl {
-  top: 1rem;
-  left: 1rem;
-}
-
-.hud.br {
-  bottom: 1rem;
-  right: 1rem;
-  text-align: right;
-}
-
-/* Only show the HUD where there is free margin beside the content */
-@media (max-width: 1150px) {
-  .hud {
-    display: none;
-  }
-}
-
-.hud::before {
-  content: "";
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border: 1px solid var(--accent);
-  opacity: .7;
-}
-
-.hud.tl::before {
-  top: -6px;
-  left: -6px;
-  border-right: 0;
-  border-bottom: 0;
-}
-
-.hud.br::before {
-  bottom: -6px;
-  right: -6px;
-  border-left: 0;
-  border-top: 0;
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* =========================================================
@@ -161,24 +84,13 @@ main p {
 }
 
 .brand {
-  font: .85rem var(--mono);
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font-weight: 600;
   color: var(--text);
 }
 
 nav a {
   margin-left: 1.5rem;
-  font: .85rem var(--mono);
   color: var(--muted);
-}
-
-nav a::before {
-  content: "[";
-}
-
-nav a::after {
-  content: "]";
 }
 
 nav a.active,
@@ -191,7 +103,7 @@ nav a:hover {
   justify-content: space-between;
   padding: 2rem 0;
   border-top: 1px solid var(--line);
-  font: .8rem var(--mono);
+  font-size: .9rem;
   color: var(--muted);
 }
 
@@ -209,29 +121,12 @@ h1 {
 h1 em {
   font-style: normal;
   color: var(--accent);
-  text-shadow: 0 0 18px rgba(240, 138, 75, .45);
 }
 
 h2 {
-  font: .85rem var(--mono);
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: var(--accent-2);
-  margin: 3rem 0 1rem;
-  padding-bottom: .5rem;
-  border-bottom: 1px solid var(--line);
-}
-
-h2::before {
-  content: "// ";
-  color: var(--accent);
-}
-
-.eyebrow {
-  font: .85rem var(--mono);
-  color: var(--accent-2);
-  letter-spacing: .14em;
-  text-transform: uppercase;
+  font-weight: 600;
+  font-size: 1.4rem;
+  margin: 3rem 0 .8rem;
 }
 
 .lead {
@@ -249,14 +144,13 @@ h2::before {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  font: .9rem var(--mono);
 }
 
 .links a {
   border: 1px solid var(--slate);
-  padding: .45rem 1rem;
+  border-radius: 3px;
+  padding: .35rem 1rem;
   color: var(--text);
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
 
 .links a:hover {
@@ -276,13 +170,6 @@ body.research {
 
 body.research .lead {
   max-width: 52ch;
-}
-
-/* The wider layout leaves less margin, so hide the corner HUD sooner */
-@media (max-width: 1450px) {
-  .hud {
-    display: none;
-  }
 }
 
 .papers {
@@ -313,8 +200,6 @@ body.research .lead {
 .paper-meta {
   font: .8rem/1.6 var(--mono);
   color: var(--accent-2);
-  letter-spacing: .08em;
-  text-transform: uppercase;
 }
 
 .paper-links {
@@ -403,15 +288,14 @@ body.research .lead {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
-  font: .9rem var(--mono);
   margin: 0 0 1.5rem;
 }
 
 .cv-actions a {
   border: 1px solid var(--slate);
-  padding: .45rem 1rem;
+  border-radius: 3px;
+  padding: .35rem 1rem;
   color: var(--text);
-  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
 
 .cv-actions a:hover {
@@ -453,13 +337,10 @@ body.research .lead {
   width: 7px;
   height: 7px;
   background: var(--accent);
-  box-shadow: 0 0 8px var(--accent);
 }
 
 .path span {
   display: block;
   font: .8rem var(--mono);
   color: var(--accent-2);
-  letter-spacing: .08em;
-  text-transform: uppercase;
 }

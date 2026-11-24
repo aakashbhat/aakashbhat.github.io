@@ -3,13 +3,9 @@ layout: default
 title: Home
 runaway: true   # show the runaway white dwarf animation
 ---
-<p class="eyebrow">Astrophysicist</p>
+# Aakash Bhat
 
-# Hello, I'm <em>Aakash Bhat</em>.
-
-<p class="lead">I study the universe, and this is my space to share what I'm working on.</p>
-
-## Elsewhere
+<p class="lead">Postdoc at the University of Potsdam, working on runaway stars and the white dwarfs ejected by supernovae.</p>
 
 <ul class="links">
   <li><a href="{{ '/research/' | relative_url }}">Research</a></li>
