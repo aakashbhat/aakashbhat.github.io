@@ -1,48 +1,93 @@
-/* ---- Tokens: change these to re-theme the whole site ---- */
+/* =========================================================
+   Theme tokens: change these to re-theme the whole site.
+   Palette: coolors.co/61210f-ea2b1f-edae49-f9df74-f9edcc
+   (sky.js reads --accent, --accent-2, --accent-3 and --text
+   for the star-rangoli, so it follows these values too.)
+   ========================================================= */
 :root {
-  --bg: #04060c;               /* near-black deep space */
-  --text: #e4eaf6;
-  --muted: #7d8aa6;
-  --accent: #7fd6ff;           /* ice blue */
-  --accent-2: #a98bff;         /* nebula violet */
-  --line: rgba(127,214,255,.15);
-  --serif: "Sora", system-ui, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, monospace;
+  --bg: #0e0605;               /* near-black, derived from oxblood */
+  --oxblood: #61210f;          /* grid lines, borders */
+  --text: #f9edcc;             /* cream */
+  --muted: #a88f78;            /* cream dimmed toward oxblood */
+  --accent: #ea2b1f;           /* laser red */
+  --accent-2: #edae49;         /* amber */
+  --accent-3: #f9df74;         /* yellow */
+  --line: rgba(234, 43, 31, .25);
+  --sans: "Rajdhani", system-ui, sans-serif;
+  --mono: "Share Tech Mono", ui-monospace, monospace;
 }
 
 * { box-sizing: border-box; }
 body {
   margin: 0; min-height: 100vh; display: flex; flex-direction: column;
-  background: radial-gradient(ellipse at 85% -10%, rgba(169,139,255,.18) 0%, transparent 50%),
-    radial-gradient(ellipse at 0% 110%, rgba(127,214,255,.12) 0%, transparent 50%), var(--bg);
-  color: var(--text); font: 300 1.05rem/1.75 var(--serif);
+  background: radial-gradient(ellipse at 0% 100%, rgba(97, 33, 15, .45) 0%, transparent 55%), var(--bg);
+  color: var(--text); font: 400 1.15rem/1.65 var(--sans);
 }
-#stars { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; }
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; text-underline-offset: 4px; }
+a { color: var(--accent-2); text-decoration: none; }
+a:hover { color: var(--accent-3); }
 
-/* ---- Layout ---- */
+/* =========================================================
+   Background layers (all fixed, behind content, no clicks)
+   ========================================================= */
+#sky, .bg-grid, .scanlines, .hud { position: fixed; pointer-events: none; z-index: -1; }
+#sky { inset: 0; width: 100%; height: 100%; }
+
+/* Perspective floor grid, fading out toward the horizon */
+.bg-grid {
+  left: -50%; right: -50%; bottom: -10vh; height: 55vh;
+  background-image:
+    linear-gradient(var(--oxblood) 1px, transparent 1px),
+    linear-gradient(90deg, var(--oxblood) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(400px) rotateX(62deg); transform-origin: bottom;
+  mask-image: linear-gradient(to top, rgba(0,0,0,.55), transparent 85%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,.55), transparent 85%);
+}
+
+/* CRT scanlines */
+.scanlines {
+  inset: 0;
+  background: repeating-linear-gradient(to bottom, rgba(249, 237, 204, .025) 0 1px, transparent 1px 3px);
+}
+
+/* Corner HUD readouts */
+.hud { font: .7rem var(--mono); color: var(--muted); opacity: .55; letter-spacing: .12em; }
+.hud.tl { top: 1rem; left: 1rem; }
+.hud.br { bottom: 1rem; right: 1rem; text-align: right; }
+.hud::before { content: ""; position: absolute; width: 14px; height: 14px; border: 1px solid var(--accent); opacity: .7; }
+.hud.tl::before { top: -6px; left: -6px; border-right: 0; border-bottom: 0; }
+.hud.br::before { bottom: -6px; right: -6px; border-left: 0; border-top: 0; }
+
+/* =========================================================
+   Layout
+   ========================================================= */
 .site-header, .site-footer, main { width: min(760px, 90vw); margin-inline: auto; }
-main { flex: 1; padding: 6vh 0; }
+main { flex: 1; padding: 8vh 0; }
 
-.site-header { display: flex; justify-content: space-between; align-items: baseline; padding: 2rem 0 0; }
-.brand { font: 400 .85rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--text); }
+.site-header { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5rem 0 0; }
+.brand { font: .85rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--text); }
 nav a { margin-left: 1.5rem; font: .85rem var(--mono); color: var(--muted); }
-nav a.active, nav a:hover { color: var(--accent); text-decoration: none; }
+nav a::before { content: "["; } nav a::after { content: "]"; }
+nav a.active, nav a:hover { color: var(--accent); }
 
 .site-footer { display: flex; justify-content: space-between; padding: 2rem 0; border-top: 1px solid var(--line);
   font: .8rem var(--mono); color: var(--muted); }
 
-/* ---- Typography ---- */
-h1 { font-weight: 300; font-size: clamp(2.6rem, 8vw, 4.5rem); line-height: 1.05; margin: 0 0 1rem; letter-spacing: -.02em; }
-h1 em { font-style: normal; background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  -webkit-background-clip: text; background-clip: text; color: transparent; }
-h2 { font: 400 .85rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+/* =========================================================
+   Typography
+   ========================================================= */
+h1 { font-weight: 500; font-size: clamp(2.8rem, 9vw, 5rem); line-height: 1; margin: 0 0 1.2rem; letter-spacing: -.01em; }
+h1 em { font-style: normal; color: var(--accent); text-shadow: 0 0 18px rgba(234, 43, 31, .45); }
+h2 { font: .85rem var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-2);
   margin: 3rem 0 1rem; padding-bottom: .5rem; border-bottom: 1px solid var(--line); }
-.eyebrow { font: .85rem var(--mono); color: var(--accent); letter-spacing: .12em; text-transform: uppercase; }
-.lead { font-size: 1.35rem; color: var(--text); max-width: 34ch; }
+h2::before { content: "// "; color: var(--accent); }
+.eyebrow { font: .85rem var(--mono); color: var(--accent-2); letter-spacing: .14em; text-transform: uppercase; }
+.lead { font-size: 1.4rem; font-weight: 300; max-width: 34ch; }
 
-/* ---- Components ---- */
-.links { list-style: none; padding: 0; display: flex; gap: 1rem; flex-wrap: wrap; font-family: var(--mono); font-size: .9rem; }
-.links a { border: 1px solid var(--line); padding: .4rem .9rem; border-radius: 999px; }
-.links a:hover { border-color: var(--accent); text-decoration: none; }
+/* =========================================================
+   Components
+   ========================================================= */
+.links { list-style: none; padding: 0; display: flex; gap: 1rem; flex-wrap: wrap; font: .9rem var(--mono); }
+.links a { border: 1px solid var(--oxblood); padding: .45rem 1rem; color: var(--text);
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+.links a:hover { border-color: var(--accent); color: var(--accent); }
