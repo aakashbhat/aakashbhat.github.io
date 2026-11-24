@@ -1,9 +1,12 @@
 \---
 
 layout: default
+
 title: About
+
 permalink: /about/
----
+
+\---
 
 <p class="eyebrow">About</p>
 

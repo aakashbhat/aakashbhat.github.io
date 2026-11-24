@@ -63,7 +63,7 @@ a:hover { color: var(--accent-3); }
 /* =========================================================
    Layout
    ========================================================= */
-.site-header, .site-footer, main { width: min(760px, 90vw); margin-left: 8vw; margin-right: auto; }
+.site-header, .site-footer, main { width: min(760px, 90vw); margin-left: 7vw; margin-right: auto; }
 main { flex: 1; padding: 8vh 0; }
 
 .site-header { display: flex; justify-content: space-between; align-items: baseline; padding: 2.5rem 0 0; }
@@ -143,3 +143,10 @@ body.research .lead { max-width: 52ch; }
 .cv-actions a:hover { border-color: var(--accent); color: var(--accent); }
 .cv-frame { display: block; width: 100%; height: 85vh; border: 1px solid var(--slate); background: #fff; }
 .cv-frame p { padding: 1rem; color: #222; }
+
+/* About page: career path timeline */
+.path { list-style: none; padding: 0; margin: 0; border-left: 1px solid var(--slate); }
+.path li { position: relative; padding: .5rem 0 .5rem 1.4rem; }
+.path li::before { content: ""; position: absolute; left: -4px; top: 1.05rem; width: 7px; height: 7px;
+  background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+.path span { display: block; font: .8rem var(--mono); color: var(--accent-2); letter-spacing: .08em; text-transform: uppercase; }
