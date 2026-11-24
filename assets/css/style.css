@@ -93,3 +93,23 @@ h2::before { content: "// "; color: var(--accent); }
 .links a { border: 1px solid var(--oxblood); padding: .45rem 1rem; color: var(--text);
   clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
 .links a:hover { border-color: var(--accent); color: var(--accent); }
+
+/* =========================================================
+   Research page: paper list (data in _data/papers.yml)
+   ========================================================= */
+.papers { list-style: none; padding: 0; margin: 2.5rem 0 0; }
+.paper { position: relative; padding: 1.4rem 0 1.4rem 1.4rem; border-left: 1px solid var(--oxblood); }
+.paper::before { content: ""; position: absolute; left: -4px; top: 1.95rem; width: 7px; height: 7px;
+  background: var(--accent); box-shadow: 0 0 8px var(--accent); }   /* a "star" on the timeline */
+.paper-meta { font: .78rem var(--mono); color: var(--accent-2); letter-spacing: .1em; text-transform: uppercase; }
+.paper h3 { font-weight: 500; font-size: 1.35rem; line-height: 1.25; margin: .3rem 0 .4rem; }
+.paper h3 a { color: var(--text); }
+.paper h3 a:hover { color: var(--accent); }
+.paper-authors { font-size: .95rem; color: var(--muted); margin: 0 0 .6rem; }
+.paper p { margin: 0 0 .7rem; }
+.paper-links { display: flex; gap: 1rem; font: .8rem var(--mono); }
+.paper-links a::before { content: "→ "; color: var(--accent); }
+.paper-links a.project { color: var(--accent); }
+.tags { list-style: none; padding: 0; margin: .7rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+.tags li { font: .7rem var(--mono); color: var(--muted); border: 1px solid var(--oxblood); padding: .1rem .5rem; }
+.paper-note { margin-top: 2rem; font: .85rem var(--mono); color: var(--muted); }

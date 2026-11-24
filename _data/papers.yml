@@ -1,0 +1,102 @@
+# First-author papers, newest first. Shown on /research/.
+# Fields:
+#   title, authors, year, journal, doi, arxiv, ads  -> bibliographic info
+#   summary  -> 1–3 plain-language sentences (edit freely)
+#   tags     -> short topic labels
+#   project  -> (optional) URL of a future project write-up; leave empty for now
+
+- title: "Intermediate-mass runaway and hypervelocity star candidates in DESI DR1"
+  authors: "Bhat, A., Dorsch, M., Heber, U., Geier, S., Dawson, H."
+  year: 2026
+  journal: "A&A 714, A348"
+  doi: 10.1051/0004-6361/202662149
+  arxiv: 2608.30063
+  ads: https://scixplorer.org/abs/2026A%26A...714A.348B
+  summary: >-
+    A search of the first DESI data release for intermediate-mass stars moving fast
+    enough to be runaways, or even to escape the Galaxy, producing a new set of
+    candidates for follow-up.
+  tags: [runaway stars, hypervelocity stars, DESI]
+  project:
+
+- title: "Discovery of a runaway star likely ejected by a Type Iax supernova"
+  authors: "Bhat, A., Hollands, M., Dorsch, M., Geier, S., Heber, U., Koester, D., Pakmor, R., Shen, K. J."
+  year: 2026
+  journal: "A&A 708, A177"
+  doi: 10.1051/0004-6361/202558578
+  arxiv: 2602.23900
+  ads: https://scixplorer.org/abs/2026A%26A...708A.177B
+  summary: >-
+    The discovery of a chemically peculiar runaway star whose properties point to
+    ejection by a Type Iax supernova, a faint, incomplete cousin of normal
+    thermonuclear explosions.
+  tags: [Type Iax supernovae, runaway stars, white dwarfs]
+  project:
+
+- title: "Violent mergers can explain the inflated state of some of the fastest stars in the Galaxy"
+  authors: "Bhat, A., Pakmor, R., Shen, K. J., Bauer, E. B., Rajamuthukumar, A. S."
+  year: 2026
+  journal: "A&A 706, A375"
+  doi: 10.1051/0004-6361/202557683
+  arxiv: 2510.12197
+  ads: https://scixplorer.org/abs/2026A%26A...706A.375B
+  summary: >-
+    Some hypervelocity white dwarfs are puffed up far beyond normal white dwarf
+    sizes. This paper shows that a violent merger of two white dwarfs can leave the
+    survivor in exactly this inflated state.
+  tags: [hypervelocity white dwarfs, white dwarf mergers, stellar evolution]
+  project:
+
+- title: "Ancient, eclipsing, tidally locked: A blue lurker progenitor in the population of extreme-velocity star candidates"
+  authors: "Bhat, A., Dorsch, M., Geier, S., Heber, U., Dawson, H., Mattig, F., Benitez-Palacios, D., Fernandez-Schlosser, P."
+  year: 2025
+  journal: "A&A 700, L23"
+  doi: 10.1051/0004-6361/202553995
+  arxiv: 2507.17101
+  ads: https://scixplorer.org/abs/2025A%26A...700L..23B
+  summary: >-
+    A star among the extreme-velocity candidates turns out to be an old, eclipsing,
+    tidally locked binary, likely on its way to becoming a "blue lurker", a star
+    rejuvenated by its companion.
+  tags: [binaries, blue lurkers, extreme-velocity stars]
+  project:
+
+- title: "Supernova shocks cannot explain the inflated state of hypervelocity runaways from white dwarf binaries"
+  authors: "Bhat, A., Bauer, E. B., Pakmor, R., Shen, K. J., Caiazzo, I., Rajamuthukumar, A. S., El-Badry, K., Kerzendorf, W. E."
+  year: 2025
+  journal: "A&A 693, A114"
+  doi: 10.1051/0004-6361/202451371
+  arxiv: 2407.03424
+  ads: https://scixplorer.org/abs/2025A%26A...693A.114B
+  summary: >-
+    Tests whether the supernova blast hitting the surviving white dwarf can puff it
+    up to the sizes observed in hypervelocity runaways, and finds that it cannot.
+  tags: [hypervelocity white dwarfs, Type Ia supernovae, stellar modelling]
+  project:
+
+- title: "The origin of early-type runaway stars from open clusters"
+  authors: "Bhat, A., Irrgang, A., Heber, U."
+  year: 2022
+  journal: "A&A 663, A39"
+  doi: 10.1051/0004-6361/202142993
+  arxiv: 2204.01594
+  ads: https://scixplorer.org/abs/2022A%26A...663A..39B
+  summary: >-
+    Traces the orbits of young, massive runaway stars back through the Galaxy to
+    find which open clusters they were ejected from.
+  tags: [runaway stars, open clusters, Galactic kinematics]
+  project:
+
+- title: "Machine learning methods for constructing probabilistic Fermi-LAT catalogs"
+  authors: "Bhat, A., Malyshev, D."
+  year: 2022
+  journal: "A&A 660, A87"
+  doi: 10.1051/0004-6361/202140766
+  arxiv: 2102.07642
+  ads: https://scixplorer.org/abs/2022A%26A...660A..87B
+  summary: >-
+    Uses machine learning to give each unidentified gamma-ray source seen by the
+    Fermi telescope a probability of belonging to each source class, rather than a
+    single label.
+  tags: [machine learning, gamma rays, Fermi-LAT]
+  project:

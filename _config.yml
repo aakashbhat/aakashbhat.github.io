@@ -8,6 +8,7 @@ lang: en
 # Navigation: edit this list to add/remove pages
 nav:
   - { title: Home,  url: / }
+  - { title: Research, url: /research/ }
   - { title: About, url: /about/ }
 
 exclude: [README.md, LICENSE]

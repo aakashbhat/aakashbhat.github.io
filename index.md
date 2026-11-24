@@ -12,6 +12,7 @@ runaway: true   # show the runaway white dwarf animation
 ## Elsewhere
 
 <ul class="links">
+  <li><a href="{{ '/research/' | relative_url }}">Research</a></li>
   <li><a href="{{ '/about/' | relative_url }}">About me</a></li>
   <li><a href="https://github.com/aakashbhat">GitHub</a></li>
 </ul>
