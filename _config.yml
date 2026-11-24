@@ -1,7 +1,7 @@
 # Site settings (no remote theme: layouts live in _layouts, styles in assets/css)
 title: Aakash Bhat
 tagline: Astrophysicist
-description: Personal space to know more about my work.
+description: Aakash Bhat, astrophysicist at the University of Potsdam.
 url: https://aakashbhat.github.io
 lang: en
 
@@ -17,3 +17,7 @@ nav:
   - { title: About, url: /about/ }
 
 exclude: [README.md, LICENSE]
+
+plugins:
+  - jekyll-sitemap   # creates /sitemap.xml listing every page
+  - jekyll-seo-tag   # adds title, description and preview tags to each page
