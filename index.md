@@ -1,6 +1,7 @@
 ---
 layout: default
 title: Home
+runaway: true   # show the runaway white dwarf animation
 ---
 <p class="eyebrow">Astrophysicist</p>
 

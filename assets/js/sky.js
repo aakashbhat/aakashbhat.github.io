@@ -19,6 +19,12 @@
   const ROT_SPEED = 0.00004; // radians per ms
   const CORE_RADIUS = 22;    // Plummer scale radius (pattern units)
 
+  // Runaway white dwarf: only on pages whose front matter sets `runaway: true`
+  const RUNAWAY = document.body.hasAttribute('data-runaway');
+  const CYCLE = 25000;       // ms between explosions
+  const FLASH = 0.04;        // fraction of the cycle the explosion flash lasts
+  const TRAVEL = 0.55;       // fraction of the cycle the escape takes
+
   const rnd = Math.random;
   const stars = [];          // {x, y, r, color, alpha, phase, speed} in pattern units
   const add = (x, y, r, color, alpha) =>
@@ -102,10 +108,71 @@
     }
     ctx.globalAlpha = 1;
 
+    if (RUNAWAY && !still) drawRunaway(t, w, h, cx, cy, scale);
+
     if (!still) {
       angle += (t - last) * ROT_SPEED; last = t;
       requestAnimationFrame(draw);
     }
+  }
+
+  // Explosion in the cluster core, then a white dwarf escaping toward the
+  // lower left with a dashed back-traced path to its origin.
+  function drawRunaway(t, w, h, cx, cy, scale) {
+    const phase = (t % CYCLE) / CYCLE;
+
+    // 1. Flash: expanding glow plus a shock ring
+    if (phase < FLASH) {
+      const k = phase / FLASH, r = (15 + k * 150) * scale;
+      const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, r);
+      glow.addColorStop(0, '#fff6d8');
+      glow.addColorStop(.3, PALETTE[1]);
+      glow.addColorStop(1, 'rgba(234, 43, 31, 0)');
+      ctx.globalAlpha = (1 - k) * .6; ctx.fillStyle = glow;
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.28); ctx.fill();
+      ctx.globalAlpha = (1 - k) * .8; ctx.strokeStyle = PALETTE[0];
+      ctx.beginPath(); ctx.arc(cx, cy, r * 1.2, 0, 6.28); ctx.stroke();
+    }
+
+    // 2. Escape: position along a straight line out of the core
+    const travel = (phase - FLASH / 2) / TRAVEL;
+    if (travel <= 0 || travel >= 1) { ctx.globalAlpha = 1; return; }
+    const dir = Math.atan2(h * .6, -w * .8);
+    const dist = travel * Math.hypot(w, h);
+    const ux = Math.cos(dir), uy = Math.sin(dir);
+    const px = cx + ux * dist, py = cy + uy * dist;
+    const fade = travel > .85 ? (1 - travel) / .15 : 1;   // fade out near the end
+
+    // Dashed back-trace to the origin
+    ctx.globalAlpha = .35 * fade; ctx.strokeStyle = PALETTE[2];
+    ctx.setLineDash([4, 6]);
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(px, py); ctx.stroke();
+    ctx.setLineDash([]);
+
+    // Motion trail, cream fading to red
+    const tail = 90 * scale;
+    const trail = ctx.createLinearGradient(px, py, px - ux * tail, py - uy * tail);
+    trail.addColorStop(0, 'rgba(249, 237, 204, .9)');
+    trail.addColorStop(1, 'rgba(234, 43, 31, 0)');
+    ctx.globalAlpha = fade; ctx.strokeStyle = trail; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px - ux * tail, py - uy * tail); ctx.stroke();
+    ctx.lineWidth = 1;
+
+    // The white dwarf itself (hot, so blue-white)
+    ctx.fillStyle = '#f4f8ff';
+    ctx.beginPath(); ctx.arc(px, py, 2.6, 0, 6.28); ctx.fill();
+
+    // Targeting brackets
+    const b = 10;
+    ctx.globalAlpha = .8 * fade; ctx.strokeStyle = PALETTE[0];
+    ctx.beginPath();
+    for (const [sx, sy] of [[-1, -1], [1, -1], [1, 1], [-1, 1]]) {
+      ctx.moveTo(px + sx * b, py + sy * (b - 5));
+      ctx.lineTo(px + sx * b, py + sy * b);
+      ctx.lineTo(px + sx * (b - 5), py + sy * b);
+    }
+    ctx.stroke();
+    ctx.globalAlpha = 1;
   }
 
   addEventListener('resize', () => { resize(); if (still) draw(0); });
