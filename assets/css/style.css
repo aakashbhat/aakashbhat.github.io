@@ -54,6 +54,8 @@ a:hover { color: var(--accent-3); }
 .hud { font: .7rem var(--mono); color: var(--muted); opacity: .55; letter-spacing: .12em; }
 .hud.tl { top: 1rem; left: 1rem; }
 .hud.br { bottom: 1rem; right: 1rem; text-align: right; }
+/* Only show the HUD where there is free margin beside the content */
+@media (max-width: 1150px) { .hud { display: none; } }
 .hud::before { content: ""; position: absolute; width: 14px; height: 14px; border: 1px solid var(--accent); opacity: .7; }
 .hud.tl::before { top: -6px; left: -6px; border-right: 0; border-bottom: 0; }
 .hud.br::before { bottom: -6px; right: -6px; border-left: 0; border-top: 0; }

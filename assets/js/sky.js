@@ -15,7 +15,7 @@
   const TEMPS = ['#9bb7ff', '#cad7ff', '#f8f7ff', '#fff1d8', '#ffd2a1', '#ffb07a'];
 
   // --- Tunable settings ---
-  const OPACITY = 0.28;      // how strongly the rangoli shows
+  const OPACITY = 0.38;      // how strongly the rangoli shows
   const ROT_SPEED = 0.00004; // radians per ms
   const CORE_RADIUS = 22;    // Plummer scale radius (pattern units)
 
@@ -88,15 +88,16 @@
       ctx.beginPath(); ctx.arc(x, y, r, 0, 6.28); ctx.fill();
     }
 
-    // Rangoli cluster, centred near the top-right corner and half off-screen
-    const scale = Math.min(w, h) / 375, cx = w - .07 * w, cy = .07 * h;
+    // Rangoli cluster, centred near the top-right corner, mostly on-screen.
+    // Pattern radius is ~290 units, so this keeps it to ~half the short side.
+    const scale = Math.min(w, h) / 600, cx = w - .14 * w, cy = .2 * h;
     const c = Math.cos(angle), s = Math.sin(angle);
     for (const st of stars) {
       const twinkle = still ? .8 : .55 + .45 * Math.abs(Math.sin(st.phase + t * st.speed * .001));
       ctx.globalAlpha = OPACITY * st.alpha * twinkle;
       ctx.fillStyle = st.color;
       ctx.beginPath();
-      ctx.arc(cx + (st.x * c - st.y * s) * scale, cy + (st.x * s + st.y * c) * scale, st.r * scale * 1.3, 0, 6.28);
+      ctx.arc(cx + (st.x * c - st.y * s) * scale, cy + (st.x * s + st.y * c) * scale, Math.max(.5, st.r * scale), 0, 6.28);
       ctx.fill();
     }
     ctx.globalAlpha = 1;
