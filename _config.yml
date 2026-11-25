@@ -21,3 +21,5 @@ exclude: [README.md, LICENSE]
 plugins:
   - jekyll-sitemap   # creates /sitemap.xml listing every page
   - jekyll-seo-tag   # adds title, description and preview tags to each page
+webmaster_verifications:
+  google: 8oBYzidrrMvR8YtfEQTrj2
