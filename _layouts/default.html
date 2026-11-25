@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang }}">
-{% seo %}
+
 
 <head>
   <meta charset="UTF-8">
@@ -12,6 +12,7 @@
     rel="stylesheet">
   <!-- ?v=build time: forces browsers to fetch the new file after each push -->
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}?v={{ site.time | date: '%s' }}">
+  {% seo %}
 </head>
 
 <body class="{{ page.class }}" {% if page.runaway %} data-runaway{% endif %}>
